@@ -26,6 +26,24 @@ class PineconeIndexer(BaseIndexer):
         
         if config.PINECONE_API_KEY:
             self.pc = Pinecone(api_key=config.PINECONE_API_KEY)
+            
+            # Create index if it doesn't exist
+            existing_indexes = [idx.name for idx in self.pc.list_indexes()]
+            if self.index_name not in existing_indexes:
+                print(f"Creating index '{self.index_name}'...")
+                from pinecone import ServerlessSpec
+                self.pc.create_index(
+                    name=self.index_name,
+                    dimension=config.EMBEDDING_DIMENSION,
+                    metric="cosine",
+                    spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+                )
+                # Wait for index to be ready
+                import time
+                while not self.pc.describe_index(self.index_name).status.ready:
+                    time.sleep(1)
+                print(f"Index '{self.index_name}' created!")
+            
             self.index = self.pc.Index(self.index_name)
         else:
             self.pc = None
@@ -42,6 +60,8 @@ class PineconeIndexer(BaseIndexer):
         Returns:
             Number of vectors upserted
         """
+        import json as json_lib
+        
         if not self.index:
             raise ValueError("Pinecone not configured")
         
@@ -55,13 +75,19 @@ class PineconeIndexer(BaseIndexer):
         # Prepare vectors for upsert
         vectors = []
         for node in nodes_with_embeddings:
+            # Clean metadata - convert non-supported types to strings
+            metadata = {}
+            for k, v in node.get("metadata", {}).items():
+                if isinstance(v, (list, dict)):
+                    metadata[k] = json_lib.dumps(v)
+                else:
+                    metadata[k] = v
+            metadata["text"] = node.get("text", "")[:1000]  # Truncate text
+            
             vector = {
                 "id": node["id"],
                 "values": node["embedding"],
-                "metadata": {
-                    **node.get("metadata", {}),
-                    "text": node.get("text", "")[:1000],  # Truncate text for metadata
-                },
+                "metadata": metadata,
             }
             vectors.append(vector)
         
