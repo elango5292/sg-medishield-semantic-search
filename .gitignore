@@ -40,8 +40,8 @@ env/
 # Pipeline outputs
 pdf_pipeline/output/
 
-# Data files (keep structure, ignore actual PDFs)
-data/*.pdf
+# Data files (uncomment to ignore PDFs)
+# data/*.pdf
 
 # Implementation plan (local only)
 IMPLEMENTATION_PLAN.md
