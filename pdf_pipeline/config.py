@@ -1,6 +1,4 @@
-"""
-Configuration settings for the PDF extraction pipeline.
-"""
+"""Configuration settings for the PDF extraction pipeline."""
 import os
 from pathlib import Path
 
@@ -32,19 +30,39 @@ NODES_TEXT_PARAGRAPHS_DIR = NODES_TEXT_DIR / "paragraphs"
 NODES_TEXT_SENTENCES_DIR = NODES_TEXT_DIR / "sentences"
 NODES_TEXT_IMAGES_DIR = NODES_TEXT_DIR / "images"
 
+# =============================================================================
 # API Keys (set via environment variables)
+# =============================================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
-# Pinecone settings
+# Pinecone
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "pdf-pipeline")
 
-# Model settings (can be overridden via environment)
+# =============================================================================
+# LLM Settings (for enrichment)
+# =============================================================================
+# LLM_PROVIDER options: "openai", "google", "anthropic", "ollama", "bedrock"
+# LLM_MODEL examples:
+#   openai:    "gpt-4o-mini", "gpt-4o", "gpt-4-turbo"
+#   google:    "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"
+#   anthropic: "claude-3-haiku-20240307", "claude-3-sonnet-20240229"
+#   ollama:    "llama3.2-vision", "llava"
+#   bedrock:   "anthropic.claude-3-haiku-20240307-v1:0"
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 
+# =============================================================================
+# Embedding Settings
+# =============================================================================
+# EMBEDDING_PROVIDER options: "openai", "google", "ollama", "bedrock", "huggingface"
+# EMBEDDING_MODEL examples:
+#   openai:      "text-embedding-3-small", "text-embedding-3-large"
+#   google:      "models/embedding-001", "models/text-embedding-004"
+#   ollama:      "nomic-embed-text", "mxbai-embed-large"
+#   huggingface: "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 EMBEDDING_BATCH_SIZE = 100
