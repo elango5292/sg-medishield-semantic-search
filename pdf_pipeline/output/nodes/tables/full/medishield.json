@@ -1,0 +1,291 @@
+[
+  {
+    "id": "table_p5_t0_full",
+    "text": "## Table A: MediShield Life benefits (Applicable for admissions or treatments received on or after 1 April 2024)\n\n| Category | Specific Benefit/Procedure | Claim Limit | Claim Limit A | Claim Limit B | Claim Limit C |\n|---|---|---|---|---|---|\n| Inpatient/day surgery | Normal ward | $800 per day | None | None | None |\n| Inpatient/day surgery | Intensive care unit ward | $2,200 per day | None | None | None |\n| Inpatient/day surgery | Psychiatric (up to 60 days per policy year) | $160 per day | None | None | None |\n| Inpatient/day surgery | Community hospital (Rehabilitative) | $350 per day | None | None | None |\n| Inpatient/day surgery | Community hospital (Sub-acute) | $430 per day | None | None | None |\n| Inpatient/day surgery | Inpatient palliative care service (General) | $460 per day | None | None | None |\n| Inpatient/day surgery | Inpatient palliative care service (Specialised) | $500 per day | None | None | None |\n| Surgical procedures | Table 1 A/B/C (less complex procedures) | None | $240 | $340 | $340 |\n| Surgical procedures | Table 2 A/B/C | None | $580 | $760 | $760 |\n| Surgical procedures | Table 3 A/B/C | None | $1,060 | $1,160 | $1,280 |\n| Surgical procedures | Table 4 A/B/C | None | $1,540 | $1,580 | $1,640 |\n| Surgical procedures | Table 5 A/B/C | None | $1,800 | $2,180 | $2,180 |\n| Surgical procedures | Table 6 A/B/C | None | $2,360 | $2,360 | $2,360 |\n| Surgical procedures | Table 7 A/B/C (more complex procedures) | None | $2,600 | $2,600 | $2,600 |\n| Implants | Implants | $7,000 per treatment | None | None | None |\n| Radiosurgery, including proton beam therapy – Category 4 | Radiosurgery, including proton beam therapy – Category 4 | $10,000 per treatment course | None | None | None |\n| Continuation of autologous bone marrow transplant treatment for multiple myeloma | Continuation of autologous bone marrow transplant treatment for multiple myeloma | $6,000 per treatment | None | None | None |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 5,
+      "table_index": 0,
+      "table_title": "Table A: MediShield Life benefits (Applicable for admissions or treatments received on or after 1 April 2024)",
+      "node_type": "table_full",
+      "bbox": [
+        36.62285714285714,
+        39.14899999999989,
+        545.9209835087719,
+        723.909995
+      ]
+    }
+  },
+  {
+    "id": "table_p6_t0_full",
+    "text": "## Table A: MediShield Life benefits (continued) (Applicable for admissions or treatments received on or after 1 April 2024)\n\n| Treatment/Category | Claim Limit |\n|---|---|\n| Outpatient treatment - Patients receiving treatment for one primary cancer - Cancer drug treatment | $200 - $9,600 per month, depending on cancer drug treatment⁵ |\n| Outpatient treatment - Patients receiving treatment for one primary cancer - Cancer drug services | $3,600 per year |\n| Outpatient treatment - Patients receiving treatment for multiple primary cancers⁶ - Cancer drug treatment | Sum of the highest cancer drug treatment limit amongst the claimable treatments received for each primary cancer per month |\n| Outpatient treatment - Patients receiving treatment for multiple primary cancers⁶ - Cancer drug services | $7,200 per year |\n| Radiotherapy for cancer - External (except Hemi-body) | $300 per treatment |\n| Radiotherapy for cancer - Brachytherapy | $500 per treatment |\n| Radiotherapy for cancer - Hemi-body | $900 per treatment |\n| Radiotherapy for cancer - Stereotactic | $1,800 per treatment |\n| Radiotherapy for cancer - Proton beam therapy – Category 1⁴ | $300 per treatment |\n| Radiotherapy for cancer - Proton beam therapy – Category 2⁴ | $500 per treatment |\n| Radiotherapy for cancer - Proton beam therapy – Category 3⁴ | $1,800 per treatment |\n| Kidney dialysis | $1,100 per month |\n| Immunosuppressants for organ transplant | $550 per month |\n| Erythropoietin for chronic kidney failure | $200 per month |\n| Long-term parenteral nutrition | $1,700 per month |\n| Maximum claim limit - Per policy year | $150,000 |\n| Maximum claim limit - Lifetime | No Limit |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 6,
+      "table_index": 0,
+      "table_title": "Table A: MediShield Life benefits (continued) (Applicable for admissions or treatments received on or after 1 April 2024)",
+      "node_type": "table_full",
+      "bbox": [
+        36.61917159763314,
+        39.14899999999989,
+        545.9420579310345,
+        765.7199949999999
+      ]
+    }
+  },
+  {
+    "id": "table_p8_t0_full",
+    "text": "## Table B: Premiums (before subsidies) (Applicable for policy start/renewal date on or after 1 Jan 2024)\n\n| Age Next Birthday (Range 1) | Annual Premiums (Inclusive of 9% GST) (Range 1) | Age Next Birthday (Range 2) | Annual Premiums (Inclusive of 9% GST) (Range 2) |\n|---|---|---|---|\n| 1 – 20 | $147.71 | 74 – 75 | $1,344.67 |\n| 21 – 30 | $254.67 | 76 – 78 | $1,558.60 |\n| 31 – 40 | $397.29 | 79 – 80 | $1,619.72 |\n| 41 – 50 | $534.81 | 81 – 83 | $1,706.31 |\n| 51 – 60 | $814.95 | 84 – 85 | $1,971.17 |\n| 61 – 65 | $1,039.07 | 86 – 88 | $2,062.85 |\n| 66 – 70 | $1,120.56 | 89 – 90 | $2,062.85 |\n| 71 – 73 | $1,217.34 | >90 | $2,093.41 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 8,
+      "table_index": 0,
+      "table_title": "Table B: Premiums (before subsidies) (Applicable for policy start/renewal date on or after 1 Jan 2024)",
+      "node_type": "table_full",
+      "bbox": [
+        40.10197183098591,
+        40.19899999999993,
+        560.9611154929577,
+        321.0200025
+      ]
+    }
+  },
+  {
+    "id": "table_p10_t0_full",
+    "text": "## Table C: Premium Rebate Table (for those born in or after 1950)\n\n| Entry Age (as of next birthday) | 66 – 70 | 71 – 73 | 74 – 75 | 76 – 78 | 79 – 80 | 81 – 83 | 84 – 85 | 86 – 90 |\n|---|---|---|---|---|---|---|---|---|\n| 30 and Below | 51 | 112 | 193 | 273 | 329 | 462 | 507 | 564 |\n| 31 – 40 | 43 | 84 | 145 | 205 | 247 | 347 | 380 | 423 |\n| 41 – 50 | 38 | 56 | 97 | 137 | 165 | 231 | 253 | 282 |\n| 51 – 60 | 32 | 32 | 48 | 68 | 82 | 116 | 127 | 141 |\n| 61 – 70 | N.A. | 13 | 35 | 53 | 67 | 75 | 81 | 95 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 10,
+      "table_index": 0,
+      "table_title": "Table C: Premium Rebate Table (for those born in or after 1950)",
+      "node_type": "table_full",
+      "bbox": [
+        41.557377049180324,
+        289.7299949999999,
+        568.1735273846155,
+        566.439995
+      ]
+    }
+  },
+  {
+    "id": "table_p11_t0_full",
+    "text": "## Table D: Premium Subsidies (For those living in residences with Annual Value of $21,000 or less)\n\n| Age Next Birthday | Household Monthly Income Per Person: Lower-Income ($0 - $1,200) | Household Monthly Income Per Person: Lower-Middle-Income ($1,201 - $2,000) | Household Monthly Income Per Person: Upper-Middle-Income ($2,001 - $2,800) |\n|---|---|---|---|\n| 1 – 40 | 25% | 20% | 15% |\n| 41 – 60 | 30% | 25% | 20% |\n| 61 – 75 | 35% | 30% | 25% |\n| 76 – 85 | 40% | 35% | 30% |\n| 86 – 90 | 45% | 40% | 35% |\n| >90 | 50% | 45% | 40% |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 11,
+      "table_index": 0,
+      "table_title": "Table D: Premium Subsidies (For those living in residences with Annual Value of $21,000 or less)",
+      "node_type": "table_full",
+      "bbox": [
+        43.81913043478261,
+        390.28899499999994,
+        553.070375308642,
+        770.039995
+      ]
+    }
+  },
+  {
+    "id": "table_p12_t0_full",
+    "text": "## Table E: Pioneer Generation Subsidies\n\n| Age Next Birthday | Pioneer Generation Subsidies as Percentage of Premiums |\n|---|---|\n| 66 – 70 | 40% |\n| 71 – 80 | 44% – 54% |\n| 81 – 90 | 54% – 59% |\n| >90 | 60% |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 12,
+      "table_index": 0,
+      "table_title": "Table E: Pioneer Generation Subsidies",
+      "node_type": "table_full",
+      "bbox": [
+        57.872727272727275,
+        291.0800025,
+        537.6672781818182,
+        460.36000249999995
+      ]
+    }
+  },
+  {
+    "id": "table_p13_t0_full",
+    "text": "## Table F: Merdeka Generation Subsidies (Applicable for policy start/renewal date on or after 1 Jul 2019)\n\n| Age Next Birthday | Additional Merdeka Generation Subsidies as Percentage of Premiums |\n|---|---|\n| 60 – 75 | 5% |\n| 76 and above | 10% |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 13,
+      "table_index": 0,
+      "table_title": "Table F: Merdeka Generation Subsidies (Applicable for policy start/renewal date on or after 1 Jul 2019)",
+      "node_type": "table_full",
+      "bbox": [
+        57.88,
+        232.85150249999995,
+        537.6600053333334,
+        385.73000249999996
+      ]
+    }
+  },
+  {
+    "id": "table_p15_t0_full",
+    "text": "## MediShield Life Premium and Subsidies Calculation\n\n| Description | Amount |\n|---|---|\n| Standard MediShield Life premium | $534.81 |\n| Add: Additional Premium at 30% of Standard MediShield Life premium | $160.44 |\n| Premium before Subsidies | $695.25 |\n| Less: Premium Subsidies at 30.0% | -$208.58 |\n| LESS: Total Government Subsidies | -$208.58 |\n| Net Premium Payable with MediSave (Inclusive of GST) | $486.67 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 15,
+      "table_index": 0,
+      "table_title": "MediShield Life Premium and Subsidies Calculation",
+      "node_type": "table_full",
+      "bbox": [
+        36.32,
+        132.01999999999995,
+        559.2413266666667,
+        248.84999999999994
+      ]
+    }
+  },
+  {
+    "id": "table_p15_t1_full",
+    "text": "## MediShield Life Premium Calculation with Subsidies\n\n| Description | Amount |\n|---|---|\n| Standard MediShield Life premium | $1,120.56 |\n| Less: Premium Rebate | -$32.00 |\n| Premium before Subsidies | $1,088.56 |\n| Less: Premium Subsidies at 35.0% | -$381.00 |\n| Less: Merdeka Generation Subsidies at 5% | -$54.43 |\n| LESS: Total Government Subsidies | -$435.43 |\n| Net Premium Payable with MediSave (Inclusive of GST) | $653.13 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 15,
+      "table_index": 1,
+      "table_title": "MediShield Life Premium Calculation with Subsidies",
+      "node_type": "table_full",
+      "bbox": [
+        36.32,
+        330.04999749999996,
+        559.2413266666667,
+        462.22999666666664
+      ]
+    }
+  },
+  {
+    "id": "table_p15_t2_full",
+    "text": "## MediShield Life Premium Calculation\n\n| Description | Amount |\n|---|---|\n| Standard MediShield Life premium | $1,344.67 |\n| Premium before Subsidies | $1,344.67 |\n| Less: Pioneer Generation Subsidies at 49.00% | -$658.89 |\n| LESS: Total Government Subsidies | -$658.89 |\n| Net Premium Payable with MediSave (Inclusive of GST) | $685.78 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 15,
+      "table_index": 2,
+      "table_title": "MediShield Life Premium Calculation",
+      "node_type": "table_full",
+      "bbox": [
+        36.32,
+        559.51299,
+        559.2413266666667,
+        665.6200057142858
+      ]
+    }
+  },
+  {
+    "id": "table_p17_t0_full",
+    "text": "## Table H: Pro-ration Factors for MediShield Life Claim (Applicable for admissions or treatments received on or after 1 March 2021)\n\n| Ward Class / Subsidy Status | Singapore Citizen | Permanent Resident |\n|---|---|---|\n| Class C | 100% | 44% |\n| Class B2 | 100% | 58% |\n| Class B2+ | 70% | 47% |\n| Class B1 | 43% | 38% |\n| Class A | 35% | 35% |\n| Private hospital | 25% | 25% |\n| Community hospital (subsidised) | 100% | 50% |\n| Community hospital (non-subsidised) | 50% | 50% |\n| Inpatient palliative care service (subsidised) | 100% | 50% |\n| Inpatient palliative care service (non-subsidised) | 50% | 50% |\n| Short stay ward (subsidised) | 100% | 58% |\n| Short stay ward (non-subsidised) | 35% | 35% |\n| Day surgery (subsidised) | 100% | 58% |\n| Day surgery (public hospital non-subsidised) | 35% | 35% |\n| Day surgery (private hospital) | 25% | 25% |\n| Outpatient treatment (subsidised)¹ | 100% | 67% |\n| Outpatient treatment (non-subsidised)¹, ² | 50% | 50% |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 17,
+      "table_index": 0,
+      "table_title": "Table H: Pro-ration Factors for MediShield Life Claim (Applicable for admissions or treatments received on or after 1 March 2021)",
+      "node_type": "table_full",
+      "bbox": [
+        43.81957446808511,
+        219.62150249999993,
+        568.1820028368794,
+        780.569995
+      ]
+    }
+  },
+  {
+    "id": "table_p18_t0_full",
+    "text": "## Table I: Deductible (Based on Age Next Birthday at the start of the policy year) (Applicable for admissions or treatments received on or after 1 March 2021)\n\n| Ward class / treatment | 80 and below | 81 and above |\n|---|---|---|\n| Class C¹ | $1,500 | $2,000 |\n| Class B2 and above¹ (including stay in private hospitals) | $2,000 | $3,000 |\n| Day surgery | $1,500 | $2,000 |\n| Outpatient treatments | Not Applicable | Not Applicable |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 18,
+      "table_index": 0,
+      "table_title": "Table I: Deductible (Based on Age Next Birthday at the start of the policy year) (Applicable for admissions or treatments received on or after 1 March 2021)",
+      "node_type": "table_full",
+      "bbox": [
+        39.384,
+        189.14149749999996,
+        556.1532056,
+        461.4699949999999
+      ]
+    }
+  },
+  {
+    "id": "table_p20_t0_full",
+    "text": "## Table J: Co-insurance\n\n| Treatment Type | Claimable Amount Accumulated within a Policy Year | Co-insurance Rate |\n|---|---|---|\n| Inpatient/day surgery | First $5,000 (inclusive of deductible) | 10% |\n| Inpatient/day surgery | Next $5,000 | 5% |\n| Inpatient/day surgery | Above $10,000 | 3% |\n| Outpatient treatment | Not applicable | 10% |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 20,
+      "table_index": 0,
+      "table_title": "Table J: Co-insurance",
+      "node_type": "table_full",
+      "bbox": [
+        104.92666666666668,
+        152.18000249999997,
+        490.7094567567567,
+        338.92999499999996
+      ]
+    }
+  },
+  {
+    "id": "table_p22_t0_full",
+    "text": "## MediShield Life Claim Computation Breakdown\n\n| Item Description | Hospital bill | MediShield Life claim computation |\n|---|---|---|\n| Daily ward & treatment charges (2 days normal ward + 8 days ICU) | $8,600 | $8,600 |\n| Surgical procedure (Table 6B) | $1,250 | $1,250 |\n| Total | $9,850 | $9,850 |\n| Less deductible | - | ($1,500) |\n| Claimable amount (less deductible) | - | $8,350 |\n| Less co-insurance | - | ($592.50) |\n| MediShield Life pays | - | $7,757.50 (79%) |\n| MediSave and/or cash | - | $2,092.50 (21%) |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 22,
+      "table_index": 0,
+      "table_title": "MediShield Life Claim Computation Breakdown",
+      "node_type": "table_full",
+      "bbox": [
+        41.65230769230769,
+        192.08749999999992,
+        566.2677107692307,
+        518.109995
+      ]
+    }
+  },
+  {
+    "id": "table_p23_t0_full",
+    "text": "## MediShield Life Claim Computation Example\n\n| Item | Hospital bill | 35% of Hospital bill (refer to Table H) | MediShield Life claim computation |\n|---|---|---|---|\n| Daily ward & treatment charges (18 days normal ward) | $12,000 | $4,200 ($12,000 x 35%) | $4,200 |\n| Surgical procedure (Table 5C) | $8,500 | $2,975 ($8,500 x 35%) | $2,180 |\n| Implant | $4,000 | $1,400 ($4,000 x 35%) | $1,400 |\n| Total | $24,500 | $8,575 | $7,780 |\n| Less deductible | - | - | ($2,000) |\n| Claimable amount (less deductible) | - | - | $5,780 |\n| Less co-insurance | - | - | ($439) |\n| MediShield Life pays | - | - | **$5,341 (22%)** |\n| MediSave and/or cash | - | - | $19,159 (78%) |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 23,
+      "table_index": 0,
+      "table_title": "MediShield Life Claim Computation Example",
+      "node_type": "table_full",
+      "bbox": [
+        34.97866666666667,
+        169.45478260869558,
+        560.5881727272726,
+        561.189995
+      ]
+    }
+  },
+  {
+    "id": "table_p24_t0_full",
+    "text": "## MediShield Life Claim Computation Example\n\n| Description | Hospital bill | 58% of Hospital bill (refer to Table H) | MediShield Life claim computation |\n|---|---|---|---|\n| Daily ward & treatment charges (52 days + 2 days ICU) | $21,340 | $12,377.20 ($21,340 x 58%) | $12,377.20 |\n| Surgical procedure (Table 6B) | $1,350 | $783 ($1,350 x 58%) | $783 |\n| Total | $22,690 | $13,160.20 | $13,160.20 |\n| Less deductible | - | - | ($2,000) |\n| Claimable amount (less deductible) | - | - | $11,160.20 |\n| Less co-insurance | - | - | ($644.81) |\n| MediShield Life pays | - | - | $10,515.39 (46%) |\n| MediSave and/or cash | - | - | $12,174.61 (54%) |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 24,
+      "table_index": 0,
+      "table_title": "MediShield Life Claim Computation Example",
+      "node_type": "table_full",
+      "bbox": [
+        37.57241379310344,
+        183.6119999999999,
+        557.8511014814815,
+        561.549995
+      ]
+    }
+  },
+  {
+    "id": "table_p27_t0_full",
+    "text": "## Table K: AWLs for IP Policyholders\n\n| Age Next Birthday | AWLs |\n|---|---|\n| 1 – 40 | $300 |\n| 41 – 70 | $600 |\n| 71 and above | $900 |",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 27,
+      "table_index": 0,
+      "table_title": "Table K: AWLs for IP Policyholders",
+      "node_type": "table_full",
+      "bbox": [
+        121.39189189189189,
+        398.7190025,
+        474.05973513513516,
+        531.4300099999999
+      ]
+    }
+  }
+]

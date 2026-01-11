@@ -34,12 +34,12 @@ NODES_TEXT_IMAGES_DIR = NODES_TEXT_DIR / "images"
 # API Keys (set via environment variables)
 # =============================================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "***REMOVED***")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 # Pinecone
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "pdf-pipeline")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "medishield-pdf-pipeline")
 
 # =============================================================================
 # LLM Settings (for enrichment)

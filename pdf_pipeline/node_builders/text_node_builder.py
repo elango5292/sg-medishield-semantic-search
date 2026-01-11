@@ -15,11 +15,7 @@ except LookupError:
 
 
 class TextNodeBuilder(BaseNodeBuilder):
-    """Build text nodes from raw text extraction data.
-    
-    Only creates image nodes for images that have existing files.
-    Includes section title in all nodes for semantic matching.
-    """
+    """Build text nodes with coordinates for highlighting."""
 
     def __init__(
         self,
@@ -30,7 +26,6 @@ class TextNodeBuilder(BaseNodeBuilder):
     ):
         sections_output_dir = sections_output_dir or config.NODES_TEXT_SECTIONS_DIR
         super().__init__(sections_output_dir)
-        self.sections_output_dir = sections_output_dir
         self.paragraphs_output_dir = paragraphs_output_dir or config.NODES_TEXT_PARAGRAPHS_DIR
         self.sentences_output_dir = sentences_output_dir or config.NODES_TEXT_SENTENCES_DIR
         self.images_output_dir = images_output_dir or config.NODES_TEXT_IMAGES_DIR
@@ -49,7 +44,7 @@ class TextNodeBuilder(BaseNodeBuilder):
                     self.enriched_images[img.get("element_id")] = img
 
     def build_nodes(self, data: dict[str, Any]) -> list[dict[str, Any]]:
-        """Build all text nodes. Only creates image nodes for existing images."""
+        """Build all text nodes with coordinates."""
         source = data.get("source", "unknown")
         elements = data.get("elements", [])
 
@@ -61,21 +56,25 @@ class TextNodeBuilder(BaseNodeBuilder):
         current_section_title = ""
         current_section_elements = []
         current_section_page = 0
+        current_section_coords = None
 
         for element in elements:
             elem_type = element.get("type", "")
+            metadata = element.get("metadata", {})
+            coords = metadata.get("coordinates", {})
 
             if elem_type == "Title":
-                # Save previous section
                 if current_section_title:
                     section_node = self._build_section_node(
-                        current_section_title, current_section_elements, current_section_page, source
+                        current_section_title, current_section_elements, 
+                        current_section_page, current_section_coords, source
                     )
                     if section_node:
                         section_nodes.append(section_node)
 
                 current_section_title = element.get("text", "").strip()
-                current_section_page = element.get("metadata", {}).get("page_number", 0)
+                current_section_page = metadata.get("page_number", 0)
+                current_section_coords = coords
                 current_section_elements = []
 
             elif elem_type == "NarrativeText":
@@ -84,7 +83,7 @@ class TextNodeBuilder(BaseNodeBuilder):
                 para_node = self._build_paragraph_node(element, current_section_title, source, len(paragraph_nodes))
                 if para_node:
                     paragraph_nodes.append(para_node)
-                    sent_nodes = self._build_sentence_nodes(element, current_section_title, source, para_node["id"])
+                    sent_nodes = self._build_sentence_nodes(element, current_section_title, source, para_node["id"], coords)
                     sentence_nodes.extend(sent_nodes)
 
             elif elem_type == "Image":
@@ -92,10 +91,10 @@ class TextNodeBuilder(BaseNodeBuilder):
                 if img_node:
                     image_nodes.append(img_node)
 
-        # Save last section
         if current_section_title:
             section_node = self._build_section_node(
-                current_section_title, current_section_elements, current_section_page, source
+                current_section_title, current_section_elements,
+                current_section_page, current_section_coords, source
             )
             if section_node:
                 section_nodes.append(section_node)
@@ -108,20 +107,57 @@ class TextNodeBuilder(BaseNodeBuilder):
 
         return section_nodes
 
-    def _build_section_node(self, title: str, elements: list, page: int, source: str) -> dict[str, Any] | None:
+    def _build_section_node(self, title: str, elements: list, page: int, title_coords: dict, source: str) -> dict[str, Any] | None:
         if not title:
             return None
 
-        content_texts = [title]
+        content_texts = []
+        # Group coordinates by page
+        coords_by_page = {}
+        
+        # Add title coordinates
+        if title_coords and title_coords.get("points"):
+            coords_by_page[page] = [title_coords]
+        
         for elem in elements:
             text = elem.get("text", "").strip()
             if text:
                 content_texts.append(text)
+            
+            metadata = elem.get("metadata", {})
+            elem_page = metadata.get("page_number", page)
+            elem_coords = metadata.get("coordinates", {})
+            if elem_coords and elem_coords.get("points"):
+                if elem_page not in coords_by_page:
+                    coords_by_page[elem_page] = []
+                coords_by_page[elem_page].append(elem_coords)
+
+        full_text = f"# {title}\n{chr(10).join(content_texts)}" if content_texts else f"# {title}"
+        
+        # Merge regions per page into single bounding box
+        coordinates = []
+        for p, regions in sorted(coords_by_page.items()):
+            all_points = []
+            for r in regions:
+                all_points.extend(r.get("points", []))
+            if all_points:
+                xs = [pt[0] for pt in all_points]
+                ys = [pt[1] for pt in all_points]
+                coordinates.append({
+                    "page": p,
+                    "bbox": [min(xs), min(ys), max(xs), max(ys)]
+                })
 
         return {
             "id": f"section_p{page}_{hash(title) % 10000}",
-            "text": "\n\n".join(content_texts),
-            "metadata": {"source": source, "page": page, "section_title": title, "node_type": "section"},
+            "text": full_text,
+            "metadata": {
+                "source": source,
+                "page": page,
+                "section_title": title,
+                "node_type": "section",
+                "coordinates": coordinates,
+            },
         }
 
     def _build_paragraph_node(self, element: dict, section_title: str, source: str, idx: int) -> dict[str, Any] | None:
@@ -131,9 +167,9 @@ class TextNodeBuilder(BaseNodeBuilder):
 
         metadata = element.get("metadata", {})
         page = metadata.get("page_number", 0)
+        coords = metadata.get("coordinates", {})
 
-        # Include section title in text for semantic matching
-        full_text = f"{section_title}: {text}" if section_title else text
+        full_text = f"# {section_title}\n{text}" if section_title else text
 
         return {
             "id": f"para_p{page}_{idx}",
@@ -143,10 +179,11 @@ class TextNodeBuilder(BaseNodeBuilder):
                 "page": page,
                 "section_title": section_title,
                 "node_type": "paragraph",
+                "coordinates": coords,
             },
         }
 
-    def _build_sentence_nodes(self, element: dict, section_title: str, source: str, para_id: str) -> list[dict[str, Any]]:
+    def _build_sentence_nodes(self, element: dict, section_title: str, source: str, para_id: str, coords: dict) -> list[dict[str, Any]]:
         text = element.get("text", "").strip()
         if not text:
             return []
@@ -161,8 +198,7 @@ class TextNodeBuilder(BaseNodeBuilder):
             if not sentence:
                 continue
 
-            # Include section title in text for semantic matching
-            full_text = f"{section_title}: {sentence}" if section_title else sentence
+            full_text = f"# {section_title}\n{sentence}" if section_title else sentence
 
             nodes.append({
                 "id": f"{para_id}_s{idx}",
@@ -174,30 +210,31 @@ class TextNodeBuilder(BaseNodeBuilder):
                     "paragraph_id": para_id,
                     "sentence_index": idx,
                     "node_type": "sentence",
+                    "coordinates": coords,  # Use paragraph coordinates for sentences
                 },
             })
 
         return nodes
 
     def _build_image_node(self, element: dict, section_title: str, source: str, idx: int) -> dict[str, Any] | None:
-        """Build image node only if image file exists."""
+        """Build image node using enriched data."""
         element_id = element.get("element_id", "")
         metadata = element.get("metadata", {})
         page = metadata.get("page_number", 0)
+        coords = metadata.get("coordinates", {})
 
-        # Check if image file exists
-        image_path = metadata.get("image_path")
-        if not image_path or not Path(image_path).exists():
+        # Get enriched data by element_id
+        enriched_img = self.enriched_images.get(element_id)
+        if not enriched_img:
             return None
 
-        # Get enriched data if available
-        enriched = self.enriched_images.get(element_id, {}).get("enriched", {})
+        enriched = enriched_img.get("enriched", {})
         title = enriched.get("title", f"Figure on page {page}")
         description = enriched.get("description", "")
+        image_path = enriched_img.get("image_path")
 
-        # Build text with section title for semantic matching
-        img_text = f"{title}: {description}" if description else title
-        full_text = f"{section_title} - {img_text}" if section_title else img_text
+        img_text = f"{title}\n{description}" if description else title
+        full_text = f"# {section_title}\n{img_text}" if section_title else img_text
 
         return {
             "id": f"image_p{page}_{idx}",
@@ -208,6 +245,7 @@ class TextNodeBuilder(BaseNodeBuilder):
                 "section_title": section_title,
                 "node_type": "image",
                 "image_path": image_path,
+                "coordinates": coords,
             },
         }
 

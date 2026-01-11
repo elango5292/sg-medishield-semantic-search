@@ -1,0 +1,240 @@
+[
+  {
+    "id": "image_p1_0",
+    "text": "MediShield Life Logo and Tagline\nThe image displays the 'MediShield Life' logo and its tagline on a white background. The wordmark 'MediShield Life' features 'MediShield' in grey text and 'Life' in green text. A dark green arc is positioned above the 'Life' portion of the wordmark, and a dark grey horizontal line underlines the entire 'MediShield Life' text. Below this, the tagline 'Better Protection. For All. For Life.' is written in black text.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 1,
+      "section_title": "",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-1-1.jpg",
+      "coordinates": {
+        "points": [
+          [
+            252.3611111111111,
+            1056.1111111111109
+          ],
+          [
+            252.3611111111111,
+            1516.1111111111109
+          ],
+          [
+            1554.0277777777778,
+            1516.1111111111109
+          ],
+          [
+            1554.0277777777778,
+            1056.1111111111109
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p1_1",
+    "text": "# Better Protection. For All. For Life.\nCentral Provident Fund Board Singapore Logo\nThe image displays the official logo of the Central Provident Fund Board (CPFB) of Singapore. It features a dark green circular emblem on a white background. The outer ring of the circle contains the text \"CENTRAL PROVIDENT FUND BOARD\" in capital letters. Inside the circle, there is a shield design, which centrally features three horizontal keys stacked vertically. Below the main circular emblem, a curved banner unfurls, displaying the word \"SINGAPORE\" in capital letters.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 1,
+      "section_title": "Better Protection. For All. For Life.",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-1-2.jpg",
+      "coordinates": {
+        "points": [
+          [
+            283.3333333333333,
+            1564.3055555555554
+          ],
+          [
+            283.3333333333333,
+            1950.972222222222
+          ],
+          [
+            643.3333333333333,
+            1950.972222222222
+          ],
+          [
+            643.3333333333333,
+            1564.3055555555554
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p1_2",
+    "text": "# Better Protection. For All. For Life.\nMinistry of Health Singapore Logo\nThe image displays the logo and name of the Ministry of Health Singapore. At the top, there is an oval-shaped logo with a stylized design inside, featuring a red oval at the top, supported by teal and dark blue shapes that resemble a figure or plant. Below the logo, the words \"MINISTRY OF HEALTH\" are written in dark blue capital letters. Underneath this, the word \"SINGAPORE\" is written in green capital letters. The entire composition is set against a plain white background.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 1,
+      "section_title": "Better Protection. For All. For Life.",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-1-3.jpg",
+      "coordinates": {
+        "points": [
+          [
+            645.8333333333333,
+            1645.6944444444441
+          ],
+          [
+            645.8333333333333,
+            1887.3611111111109
+          ],
+          [
+            1058.3333333333333,
+            1887.3611111111109
+          ],
+          [
+            1058.3333333333333,
+            1645.6944444444441
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p15_3",
+    "text": "# Age Next Birthday: 41\nMerdeka Generation Logo\nThe image displays a logo for 'Merdeka Generation' against a white background. The word 'Merdeka' is prominently featured in a large, stylized red font, with its initial 'M' designed as a flowing, ribbon-like shape that suggests a heart. Below 'Merdeka', the word 'Generation' is written in a smaller, simpler red sans-serif font.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 15,
+      "section_title": "Age Next Birthday: 41",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-15-4.jpg",
+      "coordinates": {
+        "points": [
+          [
+            331.1111111111111,
+            723.361111111111
+          ],
+          [
+            331.1111111111111,
+            872.6666666666665
+          ],
+          [
+            597.9166666666666,
+            872.6666666666665
+          ],
+          [
+            597.9166666666666,
+            723.361111111111
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p15_4",
+    "text": "# Age Next Birthday: 41\nPioneer Generation Tree Logo\nA logo featuring a stylized tree with a black, abstract trunk and a canopy composed of red shapes, including a prominent heart at the top and several smaller oval-like leaves. The words 'pioneer' in larger black letters and 'generation' in smaller black letters are centrally integrated within the red foliage of the tree. The design is set against a white background.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 15,
+      "section_title": "Age Next Birthday: 41",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-15-5.jpg",
+      "coordinates": {
+        "points": [
+          [
+            344.02777777777777,
+            1308.4444444444443
+          ],
+          [
+            344.02777777777777,
+            1521.6388888888887
+          ],
+          [
+            568.0555555555555,
+            1521.6388888888887
+          ],
+          [
+            568.0555555555555,
+            1308.4444444444443
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p26_5",
+    "text": "# 8.1 What is an Integrated Shield Plan?\nIntegrated Shield Plan Components Explained\nThe image illustrates an 'Integrated Shield Plan' as a two-component system, visually represented by a two-tiered block resembling a LEGO brick. The bottom, darker green block is 'MediShield Life', which is designed to cover large hospital bills for Class B2 or C wards in public hospitals and is managed by the Government. The top, lighter green block with studs represents 'Additional Private Insurance Coverage', which provides higher coverage for costs in private hospitals or Class B1 or A wards in public hospitals and is managed by a private insurer. A note at the bottom states that the 'Diagram is not drawn to scale'.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 26,
+      "section_title": "8.1 What is an Integrated Shield Plan?",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-26-29.jpg",
+      "coordinates": {
+        "points": [
+          [
+            212.43055555555554,
+            1325.2777777777776
+          ],
+          [
+            212.43055555555554,
+            1987.7777777777774
+          ],
+          [
+            1441.5972222222222,
+            1987.7777777777774
+          ],
+          [
+            1441.5972222222222,
+            1325.2777777777776
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  },
+  {
+    "id": "image_p27_6",
+    "text": "# Diagram 1: How the AWL is applied to the IP premium\nIntegrated Shield Plan Premium Breakdown\nThe image illustrates the components of an 'Integrated Shield Plan Premium' as a stacked block diagram. The total premium is divided into two parts: an 'Additional Private Insurance Coverage Premium' (represented by a lighter green block) and a 'MediShield Life Premium' (represented by a darker green block). Text accompanying the 'Additional Private Insurance Coverage Premium' indicates that 'Premiums can be paid by MediSave, up to the AWL'. For the 'MediShield Life Premium', the text states 'Premiums can be fully paid by MediSave'.",
+    "metadata": {
+      "source": "medishield.pdf",
+      "page": 27,
+      "section_title": "Diagram 1: How the AWL is applied to the IP premium",
+      "node_type": "image",
+      "image_path": "/Users/macbook/Documents/perdev/medishield/pdf_pipeline/output/images/figures/figure-27-30.jpg",
+      "coordinates": {
+        "points": [
+          [
+            200.0,
+            601.0
+          ],
+          [
+            200.0,
+            1009.3333333333331
+          ],
+          [
+            1459.0833333333333,
+            1009.3333333333331
+          ],
+          [
+            1459.0833333333333,
+            601.0
+          ]
+        ],
+        "system": "PixelSpace",
+        "layout_width": 1654,
+        "layout_height": 2338
+      }
+    }
+  }
+]

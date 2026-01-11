@@ -8,7 +8,7 @@ from pdf_pipeline import config
 
 
 class TableNodeBuilder(BaseNodeBuilder):
-    """Build table nodes from LLM-extracted structured data."""
+    """Build table nodes with coordinates for highlighting."""
 
     def __init__(self, granular_output_dir: Path = None, full_output_dir: Path = None):
         granular_output_dir = granular_output_dir or config.NODES_TABLES_GRANULAR_DIR
@@ -23,7 +23,6 @@ class TableNodeBuilder(BaseNodeBuilder):
         source = data.get("source", "unknown")
 
         for table in data.get("tables", []):
-            # Skip tables without rows
             if not table.get("rows"):
                 continue
 
@@ -37,22 +36,22 @@ class TableNodeBuilder(BaseNodeBuilder):
         return granular_nodes
 
     def _build_row_nodes(self, table: dict[str, Any], source: str) -> list[dict[str, Any]]:
-        """Build one node per row. Text format: 'Title | Col1: Val1 | Col2: Val2'"""
+        """Build one node per row with coordinates."""
         nodes = []
         title = table.get("title", "")
         headers = table.get("column_headers", [])
         page = table.get("page", 0)
         table_idx = table.get("table_index", 0)
+        bbox = table.get("bbox")
 
         for row_idx, row in enumerate(table.get("rows", [])):
-            # Build text with title and all column:value pairs
             parts = [title] if title else []
             for header in headers:
                 value = row.get(header, "")
                 if value:
                     parts.append(f"{header}: {value}")
 
-            if len(parts) <= 1:  # Only title, no data
+            if len(parts) <= 1:
                 continue
 
             nodes.append({
@@ -65,18 +64,20 @@ class TableNodeBuilder(BaseNodeBuilder):
                     "row_index": row_idx,
                     "table_title": title,
                     "node_type": "table_row",
+                    "bbox": bbox,
                 },
             })
 
         return nodes
 
     def _build_full_node(self, table: dict[str, Any], source: str) -> dict[str, Any] | None:
-        """Build full table node in markdown format."""
+        """Build full table node with coordinates."""
         title = table.get("title", "")
         headers = table.get("column_headers", [])
         rows = table.get("rows", [])
         page = table.get("page", 0)
         table_idx = table.get("table_index", 0)
+        bbox = table.get("bbox")
 
         if not rows:
             return None
@@ -103,6 +104,7 @@ class TableNodeBuilder(BaseNodeBuilder):
                 "table_index": table_idx,
                 "table_title": title,
                 "node_type": "table_full",
+                "bbox": bbox,
             },
         }
 
