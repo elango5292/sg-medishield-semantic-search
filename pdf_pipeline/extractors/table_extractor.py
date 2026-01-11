@@ -21,33 +21,38 @@ class TableExtractor(BaseExtractor):
         """Extract all tables from a PDF."""
         pdf_path = Path(pdf_path)
         tables = []
+        saved_pages = set()  # Track which pages we've already saved
 
         with pdfplumber.open(pdf_path) as pdf:
             for page_num, page in enumerate(pdf.pages, start=1):
-                for table_idx, table in enumerate(page.find_tables()):
-                    # Save table image
-                    image_path = self._save_table_image(page, table.bbox, page_num, table_idx, pdf_path.stem)
+                page_tables = page.find_tables()
+                
+                # Save full page image once if there are tables on this page
+                page_image_path = None
+                if page_tables and page_num not in saved_pages:
+                    page_image_path = self._save_page_image(page, page_num, pdf_path.stem)
+                    saved_pages.add(page_num)
 
+                for table_idx, table in enumerate(page_tables):
                     tables.append({
                         "page": page_num,
                         "table_index": table_idx,
                         "bbox": list(table.bbox),
                         "data": table.extract(),
-                        "image_path": str(image_path) if image_path else None,
+                        "image_path": str(page_image_path) if page_image_path else None,
                     })
 
         return {"source": pdf_path.name, "tables": tables}
 
-    def _save_table_image(self, page, bbox, page_num, table_idx, pdf_stem) -> Path | None:
-        """Crop and save table as image."""
+    def _save_page_image(self, page, page_num, pdf_stem) -> Path | None:
+        """Save full page as image."""
         try:
-            cropped = page.crop(bbox)
-            img = cropped.to_image(resolution=150)
-            image_path = self.images_dir / f"{pdf_stem}_p{page_num}_t{table_idx}.png"
+            img = page.to_image(resolution=150)
+            image_path = self.images_dir / f"{pdf_stem}_p{page_num}.png"
             img.save(image_path)
             return image_path
         except Exception as e:
-            print(f"Warning: Could not save table image: {e}")
+            print(f"Warning: Could not save page image: {e}")
             return None
 
 
