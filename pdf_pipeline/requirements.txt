@@ -1,0 +1,25 @@
+# PDF extraction
+pdfplumber>=0.10.0
+unstructured[pdf]>=0.10.0
+pdf2image>=1.16.0
+Pillow>=10.0.0
+
+# NLP
+nltk>=3.8.0
+
+# LangChain core
+langchain-core>=0.2.0
+
+# LLM providers (install what you need)
+langchain-openai>=0.1.0      # OpenAI
+langchain-google-genai>=1.0.0  # Google Gemini
+langchain-anthropic>=0.1.0   # Anthropic Claude
+langchain-ollama>=0.1.0      # Ollama (local)
+langchain-aws>=0.1.0         # AWS Bedrock
+langchain-huggingface>=0.0.3 # HuggingFace
+
+# Vector database
+pinecone-client>=3.0.0
+
+# Workflow orchestration (optional)
+# apache-airflow>=2.7.0
