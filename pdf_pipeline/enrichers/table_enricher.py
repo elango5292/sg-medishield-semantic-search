@@ -1,4 +1,4 @@
-"""Table enricher - adds title and column descriptions to tables."""
+"""Table enricher - extracts structured table data from images using LLM."""
 import base64
 import json
 from pathlib import Path
@@ -8,124 +8,118 @@ from langchain_core.messages import HumanMessage
 
 from pdf_pipeline.base import BaseEnricher
 from pdf_pipeline import config
-from pdf_pipeline.models import ModelProvider, get_default_provider, ModelConfig
+from pdf_pipeline.models import get_default_provider
 
 
 class TableEnricher(BaseEnricher):
-    """Enrich tables with title and column descriptions using LLM.
-    
-    Only processes tables that have a valid image file (allows manual curation).
-    """
+    """Extract structured table data from images using LLM."""
 
-    def __init__(
-        self,
-        output_dir: Path = None,
-        model_provider: ModelProvider = None,
-        llm_config: ModelConfig = None,
-        use_llm: bool = True,
-    ):
+    def __init__(self, output_dir: Path = None):
         output_dir = output_dir or config.ENRICHED_TABLES_DIR
         super().__init__(output_dir)
-        self.use_llm = use_llm
-
-        if model_provider:
-            self.provider = model_provider
-        elif llm_config:
-            self.provider = ModelProvider(llm_config=llm_config)
-        else:
-            self.provider = get_default_provider()
+        self.provider = get_default_provider()
 
     def enrich(self, data: dict[str, Any]) -> dict[str, Any]:
-        """Enrich only tables that have existing image files."""
+        """Process only tables that have existing image files."""
         enriched_tables = []
         skipped = 0
-        
+        source = data.get("source", "unknown")
+        pdf_stem = Path(source).stem
+
         for table in data.get("tables", []):
-            image_path = table.get("image_path")
-            
-            # Skip tables without image or with deleted image
-            if not image_path or not Path(image_path).exists():
+            page = table.get("page", 0)
+            table_idx = table.get("table_index", 0)
+            image_path = config.IMAGES_TABLES_DIR / f"{pdf_stem}_p{page}_t{table_idx}.png"
+
+            if not image_path.exists():
                 skipped += 1
                 continue
-            
-            enriched_tables.append(self._enrich_table(table))
-        
+
+            enriched = self._extract_table_data(image_path, table)
+            enriched_tables.append(enriched)
+
         if skipped > 0:
-            print(f"  Skipped {skipped} tables (no image file)")
-        print(f"  Processing {len(enriched_tables)} tables with images")
-        
-        return {"source": data.get("source"), "tables": enriched_tables}
+            print(f"  Skipped {skipped} tables (no image)")
+        print(f"  Processed {len(enriched_tables)} tables")
 
-    def _enrich_table(self, table: dict[str, Any]) -> dict[str, Any]:
-        """Enrich a single table with metadata."""
-        enriched = dict(table)
-        if self.use_llm:
-            enriched["enriched"] = self._enrich_with_llm(table)
-        else:
-            enriched["enriched"] = self._enrich_with_heuristics(table)
-        return enriched
+        return {"source": source, "tables": enriched_tables}
 
-    def _enrich_with_llm(self, table: dict[str, Any]) -> dict[str, Any]:
-        """Use multimodal LLM to extract table metadata."""
-        image_path = Path(table["image_path"])
-
+    def _extract_table_data(self, image_path: Path, raw_table: dict) -> dict[str, Any]:
+        """Extract structured table data from image using LLM."""
         try:
             llm = self.provider.get_llm()
-            if not llm:
-                return self._enrich_with_heuristics(table)
 
             with open(image_path, "rb") as f:
                 image_data = base64.b64encode(f.read()).decode("utf-8")
 
-            message = HumanMessage(content=[
-                {"type": "text", "text": """Analyze this table image and provide:
-1. A descriptive title for the table
-2. The column headers (list them)
-3. A brief description of what each column contains
+            prompt = """Extract the complete table data from this image. This will be used for semantic search embeddings.
 
-Respond in JSON format only:
-{"title": "...", "column_headers": ["col1", "col2", ...], "column_descriptions": {"col1": "description", ...}}"""},
+Return a JSON object with:
+1. "title": The table title/caption (if visible, otherwise describe what the table is about)
+2. "column_headers": Array of column header names
+3. "rows": Array of row objects, where each row has the column header as key and cell value as value
+
+Rules:
+- Skip completely empty rows
+- For merged cells spanning multiple rows, repeat the value in each row
+- Clean up any OCR artifacts or formatting issues
+- Make values searchable and meaningful
+
+Example output format:
+{
+  "title": "MediShield Life Claim Limits",
+  "column_headers": ["Category", "Type", "Claim Limit"],
+  "rows": [
+    {"Category": "Ward Charges", "Type": "Normal Ward", "Claim Limit": "$800/day"},
+    {"Category": "Ward Charges", "Type": "ICU", "Claim Limit": "$1,800/day"}
+  ]
+}
+
+Return ONLY valid JSON, no other text."""
+
+            message = HumanMessage(content=[
+                {"type": "text", "text": prompt},
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_data}"}}
             ])
 
             response = llm.invoke([message])
             content = response.content
 
+            # Extract JSON
             start = content.find("{")
             end = content.rfind("}") + 1
             if start >= 0 and end > start:
-                result = json.loads(content[start:end])
-                result["enrichment_method"] = "llm"
-                return result
+                extracted = json.loads(content[start:end])
+                return {
+                    "page": raw_table.get("page"),
+                    "table_index": raw_table.get("table_index"),
+                    "bbox": raw_table.get("bbox"),
+                    "image_path": str(image_path),
+                    "title": extracted.get("title", ""),
+                    "column_headers": extracted.get("column_headers", []),
+                    "rows": extracted.get("rows", []),
+                }
 
         except Exception as e:
-            print(f"LLM enrichment failed for {image_path.name}: {e}")
+            print(f"  LLM failed for {image_path.name}: {e}")
 
-        return self._enrich_with_heuristics(table)
-
-    def _enrich_with_heuristics(self, table: dict[str, Any]) -> dict[str, Any]:
-        """Use heuristics to extract table metadata (first row as headers)."""
-        raw_data = table.get("data") or table.get("raw_data") or []
-
-        column_headers = []
-        if raw_data:
-            column_headers = [str(h) if h else f"Column_{i}" for i, h in enumerate(raw_data[0])]
-
+        # Fallback - return raw data
         return {
-            "title": f"Table on page {table.get('page', '?')}",
-            "column_headers": column_headers,
-            "column_descriptions": {},
-            "enrichment_method": "heuristics",
+            "page": raw_table.get("page"),
+            "table_index": raw_table.get("table_index"),
+            "bbox": raw_table.get("bbox"),
+            "image_path": str(image_path),
+            "title": f"Table on page {raw_table.get('page')}",
+            "column_headers": [],
+            "rows": [],
         }
 
 
 if __name__ == "__main__":
     import sys
-
     if len(sys.argv) < 2:
         print("Usage: python -m pdf_pipeline.enrichers.table_enricher <input_json>")
         sys.exit(1)
-
     config.create_output_dirs()
     enricher = TableEnricher()
     output_path = enricher.run(Path(sys.argv[1]))

@@ -1,16 +1,13 @@
-"""
-Text node builder - creates nodes from text extraction data.
-"""
+"""Text node builder - creates nodes from text extraction data."""
 from pathlib import Path
 from typing import Any
+import json
 
 import nltk
 
 from pdf_pipeline.base import BaseNodeBuilder
 from pdf_pipeline import config
 
-
-# Download punkt tokenizer if needed
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -18,12 +15,12 @@ except LookupError:
 
 
 class TextNodeBuilder(BaseNodeBuilder):
-    """
-    Build text nodes from raw text extraction data.
+    """Build text nodes from raw text extraction data.
     
-    Creates section, paragraph, sentence, and image nodes.
+    Only creates image nodes for images that have existing files.
+    Includes section title in all nodes for semantic matching.
     """
-    
+
     def __init__(
         self,
         sections_output_dir: Path = None,
@@ -31,282 +28,206 @@ class TextNodeBuilder(BaseNodeBuilder):
         sentences_output_dir: Path = None,
         images_output_dir: Path = None,
     ):
-        # Use sections dir as default output
         sections_output_dir = sections_output_dir or config.NODES_TEXT_SECTIONS_DIR
         super().__init__(sections_output_dir)
-        
         self.sections_output_dir = sections_output_dir
         self.paragraphs_output_dir = paragraphs_output_dir or config.NODES_TEXT_PARAGRAPHS_DIR
         self.sentences_output_dir = sentences_output_dir or config.NODES_TEXT_SENTENCES_DIR
         self.images_output_dir = images_output_dir or config.NODES_TEXT_IMAGES_DIR
-        
-        # Create all output directories
+
         for d in [self.paragraphs_output_dir, self.sentences_output_dir, self.images_output_dir]:
             d.mkdir(parents=True, exist_ok=True)
-        
+
         self.enriched_images = {}
-    
+
     def load_enriched_images(self, enriched_images_path: Path):
-        """
-        Load enriched image data for image nodes.
-        """
-        import json
+        """Load enriched image data."""
         if enriched_images_path.exists():
             with open(enriched_images_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 for img in data.get("images", []):
                     self.enriched_images[img.get("element_id")] = img
-    
+
     def build_nodes(self, data: dict[str, Any]) -> list[dict[str, Any]]:
-        """
-        Build all text nodes.
-        
-        Args:
-            data: Raw text extraction data
-            
-        Returns:
-            List of section node dictionaries (others saved separately)
-        """
+        """Build all text nodes. Only creates image nodes for existing images."""
         source = data.get("source", "unknown")
         elements = data.get("elements", [])
-        
+
         section_nodes = []
         paragraph_nodes = []
         sentence_nodes = []
         image_nodes = []
-        
-        current_section = None
+
+        current_section_title = ""
         current_section_elements = []
-        
+        current_section_page = 0
+
         for element in elements:
             elem_type = element.get("type", "")
-            
-            # Handle section titles
+
             if elem_type == "Title":
                 # Save previous section
-                if current_section:
+                if current_section_title:
                     section_node = self._build_section_node(
-                        current_section, current_section_elements, source
+                        current_section_title, current_section_elements, current_section_page, source
                     )
                     if section_node:
                         section_nodes.append(section_node)
-                
-                # Start new section
-                current_section = element
+
+                current_section_title = element.get("text", "").strip()
+                current_section_page = element.get("metadata", {}).get("page_number", 0)
                 current_section_elements = []
-            
-            # Handle paragraphs
+
             elif elem_type == "NarrativeText":
                 current_section_elements.append(element)
-                
-                # Build paragraph node
-                para_node = self._build_paragraph_node(
-                    element, current_section, source, len(paragraph_nodes)
-                )
+
+                para_node = self._build_paragraph_node(element, current_section_title, source, len(paragraph_nodes))
                 if para_node:
                     paragraph_nodes.append(para_node)
-                    
-                    # Build sentence nodes
-                    sent_nodes = self._build_sentence_nodes(
-                        element, current_section, source, para_node["id"]
-                    )
+                    sent_nodes = self._build_sentence_nodes(element, current_section_title, source, para_node["id"])
                     sentence_nodes.extend(sent_nodes)
-            
-            # Handle images
+
             elif elem_type == "Image":
-                img_node = self._build_image_node(
-                    element, current_section, source, len(image_nodes)
-                )
+                img_node = self._build_image_node(element, current_section_title, source, len(image_nodes))
                 if img_node:
                     image_nodes.append(img_node)
-        
+
         # Save last section
-        if current_section:
+        if current_section_title:
             section_node = self._build_section_node(
-                current_section, current_section_elements, source
+                current_section_title, current_section_elements, current_section_page, source
             )
             if section_node:
                 section_nodes.append(section_node)
-        
-        # Save other node types
+
+        print(f"  Created {len(section_nodes)} sections, {len(paragraph_nodes)} paragraphs, {len(sentence_nodes)} sentences, {len(image_nodes)} images")
+
         self._save_nodes(paragraph_nodes, self.paragraphs_output_dir, Path(source).stem)
         self._save_nodes(sentence_nodes, self.sentences_output_dir, Path(source).stem)
         self._save_nodes(image_nodes, self.images_output_dir, Path(source).stem)
-        
+
         return section_nodes
-    
-    def _build_section_node(
-        self,
-        title_element: dict[str, Any],
-        content_elements: list[dict[str, Any]],
-        source: str,
-    ) -> dict[str, Any] | None:
-        """
-        Build a section node from title and content elements.
-        """
-        title = title_element.get("text", "").strip()
+
+    def _build_section_node(self, title: str, elements: list, page: int, source: str) -> dict[str, Any] | None:
         if not title:
             return None
-        
-        page = title_element.get("metadata", {}).get("page_number", 0)
-        
-        # Combine title and content
+
         content_texts = [title]
-        for elem in content_elements:
+        for elem in elements:
             text = elem.get("text", "").strip()
             if text:
                 content_texts.append(text)
-        
-        full_text = "\n\n".join(content_texts)
-        
+
         return {
             "id": f"section_p{page}_{hash(title) % 10000}",
-            "text": full_text,
-            "metadata": {
-                "source": source,
-                "page": page,
-                "section_title": title,
-                "node_type": "section",
-            },
+            "text": "\n\n".join(content_texts),
+            "metadata": {"source": source, "page": page, "section_title": title, "node_type": "section"},
         }
-    
-    def _build_paragraph_node(
-        self,
-        element: dict[str, Any],
-        section_element: dict[str, Any] | None,
-        source: str,
-        para_idx: int,
-    ) -> dict[str, Any] | None:
-        """
-        Build a paragraph node.
-        """
+
+    def _build_paragraph_node(self, element: dict, section_title: str, source: str, idx: int) -> dict[str, Any] | None:
         text = element.get("text", "").strip()
         if not text:
             return None
-        
+
         metadata = element.get("metadata", {})
         page = metadata.get("page_number", 0)
-        section_title = section_element.get("text", "") if section_element else ""
-        
+
+        # Include section title in text for semantic matching
+        full_text = f"{section_title}: {text}" if section_title else text
+
         return {
-            "id": f"para_p{page}_{para_idx}",
-            "text": text,
+            "id": f"para_p{page}_{idx}",
+            "text": full_text,
             "metadata": {
                 "source": source,
                 "page": page,
                 "section_title": section_title,
                 "node_type": "paragraph",
-                "coordinates": metadata.get("coordinates"),
             },
         }
-    
-    def _build_sentence_nodes(
-        self,
-        element: dict[str, Any],
-        section_element: dict[str, Any] | None,
-        source: str,
-        paragraph_id: str,
-    ) -> list[dict[str, Any]]:
-        """
-        Build sentence nodes from a paragraph.
-        """
+
+    def _build_sentence_nodes(self, element: dict, section_title: str, source: str, para_id: str) -> list[dict[str, Any]]:
         text = element.get("text", "").strip()
         if not text:
             return []
-        
+
         metadata = element.get("metadata", {})
         page = metadata.get("page_number", 0)
-        section_title = section_element.get("text", "") if section_element else ""
-        
-        # Split into sentences
         sentences = nltk.sent_tokenize(text)
-        
+
         nodes = []
-        for sent_idx, sentence in enumerate(sentences):
+        for idx, sentence in enumerate(sentences):
             sentence = sentence.strip()
             if not sentence:
                 continue
-            
-            node = {
-                "id": f"{paragraph_id}_s{sent_idx}",
-                "text": sentence,
+
+            # Include section title in text for semantic matching
+            full_text = f"{section_title}: {sentence}" if section_title else sentence
+
+            nodes.append({
+                "id": f"{para_id}_s{idx}",
+                "text": full_text,
                 "metadata": {
                     "source": source,
                     "page": page,
                     "section_title": section_title,
-                    "paragraph_id": paragraph_id,
-                    "sentence_index": sent_idx,
+                    "paragraph_id": para_id,
+                    "sentence_index": idx,
                     "node_type": "sentence",
                 },
-            }
-            nodes.append(node)
-        
+            })
+
         return nodes
-    
-    def _build_image_node(
-        self,
-        element: dict[str, Any],
-        section_element: dict[str, Any] | None,
-        source: str,
-        img_idx: int,
-    ) -> dict[str, Any] | None:
-        """
-        Build an image node.
-        """
+
+    def _build_image_node(self, element: dict, section_title: str, source: str, idx: int) -> dict[str, Any] | None:
+        """Build image node only if image file exists."""
         element_id = element.get("element_id", "")
         metadata = element.get("metadata", {})
         page = metadata.get("page_number", 0)
-        section_title = section_element.get("text", "") if section_element else ""
-        
+
+        # Check if image file exists
+        image_path = metadata.get("image_path")
+        if not image_path or not Path(image_path).exists():
+            return None
+
         # Get enriched data if available
         enriched = self.enriched_images.get(element_id, {}).get("enriched", {})
-        title = enriched.get("title", f"Image on page {page}")
+        title = enriched.get("title", f"Figure on page {page}")
         description = enriched.get("description", "")
-        image_path = self.enriched_images.get(element_id, {}).get("image_path")
-        
-        # Build text: "Title: Description"
-        text = f"{title}: {description}" if description else title
-        
+
+        # Build text with section title for semantic matching
+        img_text = f"{title}: {description}" if description else title
+        full_text = f"{section_title} - {img_text}" if section_title else img_text
+
         return {
-            "id": f"image_p{page}_{img_idx}",
-            "text": text,
+            "id": f"image_p{page}_{idx}",
+            "text": full_text,
             "metadata": {
                 "source": source,
                 "page": page,
                 "section_title": section_title,
                 "node_type": "image",
-                "coordinates": metadata.get("coordinates"),
                 "image_path": image_path,
             },
         }
-    
+
     def _save_nodes(self, nodes: list[dict[str, Any]], output_dir: Path, filename: str):
-        """
-        Save nodes to JSON file.
-        """
-        import json
         output_path = output_dir / f"{filename}.json"
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(nodes, f, indent=2, ensure_ascii=False)
 
 
-# CLI entry point
 if __name__ == "__main__":
     import sys
-    
     if len(sys.argv) < 2:
         print("Usage: python -m pdf_pipeline.node_builders.text_node_builder <input_json> [enriched_images_json]")
         sys.exit(1)
-    
+
     config.create_output_dirs()
-    
-    input_path = Path(sys.argv[1])
     builder = TextNodeBuilder()
-    
-    # Load enriched images if provided
+
     if len(sys.argv) > 2:
-        enriched_images_path = Path(sys.argv[2])
-        builder.load_enriched_images(enriched_images_path)
-    
-    output_path = builder.run(input_path)
+        builder.load_enriched_images(Path(sys.argv[2]))
+
+    output_path = builder.run(Path(sys.argv[1]))
     print(f"Text nodes saved to: {output_path}")

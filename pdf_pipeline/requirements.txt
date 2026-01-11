@@ -1,8 +1,10 @@
 # PDF extraction
 pdfplumber>=0.11.0
 unstructured[pdf]>=0.16.0
+unstructured-inference>=0.8.0
 pdf2image>=1.17.0
 Pillow>=11.0.0
+pillow-heif>=0.18.0
 
 # NLP
 nltk>=3.9.0
@@ -20,6 +22,3 @@ langchain-huggingface>=0.1.0
 
 # Vector database
 pinecone>=5.0.0
-
-# Workflow orchestration (optional)
-# apache-airflow>=2.10.0

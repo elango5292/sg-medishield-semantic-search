@@ -34,7 +34,7 @@ NODES_TEXT_IMAGES_DIR = NODES_TEXT_DIR / "images"
 # API Keys (set via environment variables)
 # =============================================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "***REMOVED***")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 # Pinecone
@@ -52,7 +52,7 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "pdf-pipeline")
 #   ollama:    "llama3.2-vision", "llava"
 #   bedrock:   "anthropic.claude-3-haiku-20240307-v1:0"
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google")
-LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3-flash")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 
 # =============================================================================
 # Embedding Settings

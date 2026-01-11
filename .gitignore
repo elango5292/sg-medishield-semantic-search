@@ -38,7 +38,7 @@ env/
 .env.local
 
 # Pipeline outputs
-pdf_pipeline/output/
+ppdf_pipeline/output/
 
 # Data files (uncomment to ignore PDFs)
 # data/*.pdf
