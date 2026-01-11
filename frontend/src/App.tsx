@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TopNavigation from '@cloudscape-design/components/top-navigation';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Box from '@cloudscape-design/components/box';
 import Badge from '@cloudscape-design/components/badge';
-import Link from '@cloudscape-design/components/link';
 import Alert from '@cloudscape-design/components/alert';
 import Spinner from '@cloudscape-design/components/spinner';
 import Input from '@cloudscape-design/components/input';
@@ -49,18 +48,23 @@ function App() {
     }
   };
 
+  // Run default query on first load
+  useEffect(() => {
+    handleSearch('What happens if I can\'t afford my premiums?');
+  }, []);
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <TopNavigation
         identity={{
           href: '#',
-          title: 'MediShield Life Document Search',
+          title: 'MediShield Life Explorer',
         }}
         utilities={[
           {
             type: 'button',
-            text: 'MOH Website',
-            href: 'https://www.moh.gov.sg/medishield-life',
+            text: 'GitHub',
+            href: 'https://github.com/elango5292/sg-medishield-semantic-search',
             external: true,
           },
         ]}
@@ -196,10 +200,7 @@ function App() {
             }}
           >
             <Box fontSize="body-s" color="text-body-secondary" textAlign="center">
-              Demo only.{' '}
-              <Link href="https://www.moh.gov.sg/medishield-life" external fontSize="body-s">
-                Official info
-              </Link>
+              Powered by Gemini Embeddings & Pinecone
             </Box>
           </div>
         </div>

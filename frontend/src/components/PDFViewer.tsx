@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Button from '@cloudscape-design/components/button';
@@ -22,12 +22,36 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
     width: number;
     height: number;
   } | null>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedResult?.page) {
       setPageNumber(selectedResult.page);
     }
   }, [selectedResult]);
+
+  // Scroll to highlight when it appears
+  useEffect(() => {
+    if (highlightRef.current && containerRef.current) {
+      const highlight = highlightRef.current;
+      const container = containerRef.current;
+      
+      // Wait for render
+      setTimeout(() => {
+        const highlightRect = highlight.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        
+        // Calculate scroll position to center the highlight
+        const scrollTop = container.scrollTop + highlightRect.top - containerRect.top - containerRect.height / 2 + highlightRect.height / 2;
+        
+        container.scrollTo({
+          top: Math.max(0, scrollTop),
+          behavior: 'smooth',
+        });
+      }, 100);
+    }
+  }, [selectedResult, pageNumber, pageDimensions]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -84,42 +108,55 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
         }}
       >
         <SpaceBetween size="xs" direction="horizontal" alignItems="center">
-          <Button
-            iconName="angle-left"
-            variant="icon"
-            onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
-            disabled={pageNumber <= 1}
-          />
-          <Box color="text-status-inactive">
-            Page {pageNumber} / {numPages}
+          <span style={{ filter: 'invert(1) brightness(0.8)' }}>
+            <Button
+              iconName="angle-left"
+              variant="icon"
+              onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
+              disabled={pageNumber <= 1}
+            />
+          </span>
+          <Box fontSize="body-s">
+            <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+              Page {pageNumber} / {numPages}
+            </span>
           </Box>
-          <Button
-            iconName="angle-right"
-            variant="icon"
-            onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
-            disabled={pageNumber >= numPages}
-          />
+          <span style={{ filter: 'invert(1) brightness(0.8)' }}>
+            <Button
+              iconName="angle-right"
+              variant="icon"
+              onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
+              disabled={pageNumber >= numPages}
+            />
+          </span>
         </SpaceBetween>
 
         <SpaceBetween size="xs" direction="horizontal" alignItems="center">
-          <Button
-            iconName="zoom-out"
-            variant="icon"
-            onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
-          />
-          <Box color="text-status-inactive" fontSize="body-s">
-            {Math.round(scale * 100)}%
+          <span style={{ filter: 'invert(1) brightness(0.8)' }}>
+            <Button
+              iconName="zoom-out"
+              variant="icon"
+              onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
+            />
+          </span>
+          <Box fontSize="body-s">
+            <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+              {Math.round(scale * 100)}%
+            </span>
           </Box>
-          <Button
-            iconName="zoom-in"
-            variant="icon"
-            onClick={() => setScale((s) => Math.min(2.5, s + 0.1))}
-          />
+          <span style={{ filter: 'invert(1) brightness(0.8)' }}>
+            <Button
+              iconName="zoom-in"
+              variant="icon"
+              onClick={() => setScale((s) => Math.min(2.5, s + 0.1))}
+            />
+          </span>
         </SpaceBetween>
       </div>
 
       {/* PDF Content */}
       <div
+        ref={containerRef}
         style={{
           flex: 1,
           overflow: 'auto',
@@ -158,7 +195,7 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
               renderTextLayer={true}
               renderAnnotationLayer={true}
             />
-            {highlightStyle && <div style={highlightStyle} />}
+            {highlightStyle && <div ref={highlightRef} style={highlightStyle} />}
           </div>
         </Document>
       </div>
