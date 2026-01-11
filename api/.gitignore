@@ -1,0 +1,16 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars.local
+
+# Build artifacts
+modules/lambda/*.zip
+modules/lambda_layer/layer/
+modules/lambda_layer/*.zip
+
+# Secrets
+*.tfvars.local
+
+builds
