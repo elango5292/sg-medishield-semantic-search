@@ -51,8 +51,8 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "pdf-pipeline")
 #   anthropic: "claude-3-haiku-20240307", "claude-3-sonnet-20240229"
 #   ollama:    "llama3.2-vision", "llava"
 #   bedrock:   "anthropic.claude-3-haiku-20240307-v1:0"
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3-flash")
 
 # =============================================================================
 # Embedding Settings
@@ -63,8 +63,8 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 #   google:      "models/embedding-001", "models/text-embedding-004"
 #   ollama:      "nomic-embed-text", "mxbai-embed-large"
 #   huggingface: "sentence-transformers/all-MiniLM-L6-v2"
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "google")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-1.0")
 EMBEDDING_BATCH_SIZE = 100
 
 
