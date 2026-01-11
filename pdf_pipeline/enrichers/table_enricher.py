@@ -12,7 +12,10 @@ from pdf_pipeline.models import ModelProvider, get_default_provider, ModelConfig
 
 
 class TableEnricher(BaseEnricher):
-    """Enrich tables with title and column descriptions using LLM."""
+    """Enrich tables with title and column descriptions using LLM.
+    
+    Only processes tables that have a valid image file (allows manual curation).
+    """
 
     def __init__(
         self,
@@ -33,16 +36,30 @@ class TableEnricher(BaseEnricher):
             self.provider = get_default_provider()
 
     def enrich(self, data: dict[str, Any]) -> dict[str, Any]:
-        """Enrich all tables in the data."""
+        """Enrich only tables that have existing image files."""
         enriched_tables = []
+        skipped = 0
+        
         for table in data.get("tables", []):
+            image_path = table.get("image_path")
+            
+            # Skip tables without image or with deleted image
+            if not image_path or not Path(image_path).exists():
+                skipped += 1
+                continue
+            
             enriched_tables.append(self._enrich_table(table))
+        
+        if skipped > 0:
+            print(f"  Skipped {skipped} tables (no image file)")
+        print(f"  Processing {len(enriched_tables)} tables with images")
+        
         return {"source": data.get("source"), "tables": enriched_tables}
 
     def _enrich_table(self, table: dict[str, Any]) -> dict[str, Any]:
         """Enrich a single table with metadata."""
         enriched = dict(table)
-        if self.use_llm and table.get("image_path"):
+        if self.use_llm:
             enriched["enriched"] = self._enrich_with_llm(table)
         else:
             enriched["enriched"] = self._enrich_with_heuristics(table)
@@ -51,8 +68,6 @@ class TableEnricher(BaseEnricher):
     def _enrich_with_llm(self, table: dict[str, Any]) -> dict[str, Any]:
         """Use multimodal LLM to extract table metadata."""
         image_path = Path(table["image_path"])
-        if not image_path.exists():
-            return self._enrich_with_heuristics(table)
 
         try:
             llm = self.provider.get_llm()
@@ -84,13 +99,12 @@ Respond in JSON format only:
                 return result
 
         except Exception as e:
-            print(f"LLM enrichment failed: {e}")
+            print(f"LLM enrichment failed for {image_path.name}: {e}")
 
         return self._enrich_with_heuristics(table)
 
     def _enrich_with_heuristics(self, table: dict[str, Any]) -> dict[str, Any]:
         """Use heuristics to extract table metadata (first row as headers)."""
-        # Support both "data" (new) and "raw_data" (old) keys
         raw_data = table.get("data") or table.get("raw_data") or []
 
         column_headers = []
