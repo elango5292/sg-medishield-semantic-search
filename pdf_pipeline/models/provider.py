@@ -162,18 +162,35 @@ def get_default_provider() -> ModelProvider:
     """Get the global default model provider."""
     global _default_provider
     if _default_provider is None:
-        # Create with defaults from environment
-        import os
+        # Create with defaults from config
+        from pdf_pipeline import config
+        
+        # Get API key based on provider
+        llm_api_key = None
+        if config.LLM_PROVIDER == "openai":
+            llm_api_key = config.OPENAI_API_KEY
+        elif config.LLM_PROVIDER == "google":
+            llm_api_key = config.GOOGLE_API_KEY
+        elif config.LLM_PROVIDER == "anthropic":
+            llm_api_key = config.ANTHROPIC_API_KEY
+        
+        embed_api_key = None
+        if config.EMBEDDING_PROVIDER == "openai":
+            embed_api_key = config.OPENAI_API_KEY
+        elif config.EMBEDDING_PROVIDER == "google":
+            embed_api_key = config.GOOGLE_API_KEY
+        
         _default_provider = ModelProvider(
             llm_config=ModelConfig(
-                provider=os.getenv("LLM_PROVIDER", "openai"),
-                model_name=os.getenv("LLM_MODEL", "gpt-4o-mini"),
-                api_key=os.getenv("OPENAI_API_KEY") or os.getenv("GOOGLE_API_KEY"),
+                provider=config.LLM_PROVIDER,
+                model_name=config.LLM_MODEL,
+                api_key=llm_api_key,
             ),
             embedding_config=ModelConfig(
-                provider=os.getenv("EMBEDDING_PROVIDER", "openai"),
-                model_name=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
-                api_key=os.getenv("OPENAI_API_KEY") or os.getenv("GOOGLE_API_KEY"),
+                provider=config.EMBEDDING_PROVIDER,
+                model_name=config.EMBEDDING_MODEL,
+                api_key=embed_api_key,
+                extra_params={"output_dimensionality": config.EMBEDDING_DIMENSION} if config.EMBEDDING_PROVIDER == "google" else {},
             ),
         )
     return _default_provider

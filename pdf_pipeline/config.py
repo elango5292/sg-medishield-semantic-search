@@ -64,8 +64,9 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 #   ollama:      "nomic-embed-text", "mxbai-embed-large"
 #   huggingface: "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "google")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-1.0")
-EMBEDDING_BATCH_SIZE = 100
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "models/gemini-embedding-001")
+EMBEDDING_DIMENSION = 1536
+EMBEDDING_BATCH_SIZE = 20  # Small batches to avoid rate limits
 
 
 def create_output_dirs():
