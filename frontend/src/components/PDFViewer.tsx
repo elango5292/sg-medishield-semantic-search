@@ -17,7 +17,7 @@ interface PDFViewerProps {
 export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [scale, setScale] = useState<number>(0.8);
+  const [scale, setScale] = useState<number>(1);
   const [pageDimensions, setPageDimensions] = useState<{
     width: number;
     height: number;
@@ -64,10 +64,11 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
         top: `${minY}px`,
         width: `${maxX - minX}px`,
         height: `${maxY - minY}px`,
-        backgroundColor: 'rgba(0, 122, 204, 0.2)',
-        border: '2px solid rgba(0, 122, 204, 0.8)',
+        backgroundColor: 'rgba(255, 153, 0, 0.25)',
+        border: '3px solid #ff9900',
         borderRadius: '4px',
         pointerEvents: 'none',
+        boxShadow: '0 0 12px rgba(255, 153, 0, 0.4)',
       };
     } catch {
       return null;
@@ -83,15 +84,19 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: '#fafafa',
+        backgroundColor: '#232f3e',
         borderRadius: '8px',
+        overflow: 'hidden',
       }}
     >
       <div
         style={{
           padding: '8px 16px',
-          borderBottom: '1px solid #eaeded',
-          backgroundColor: '#fff',
+          backgroundColor: '#232f3e',
+          borderBottom: '1px solid #3a4553',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <SpaceBetween size="xs" direction="horizontal" alignItems="center">
@@ -101,7 +106,7 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
             onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
             disabled={pageNumber <= 1}
           />
-          <Box variant="span">
+          <Box variant="span" color="text-status-inactive">
             Page {pageNumber} of {numPages}
           </Box>
           <Button
@@ -110,13 +115,17 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
             onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
             disabled={pageNumber >= numPages}
           />
-          <div style={{ marginLeft: 'auto' }} />
+        </SpaceBetween>
+
+        <SpaceBetween size="xs" direction="horizontal" alignItems="center">
           <Button
             iconName="zoom-out"
             variant="icon"
             onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
           />
-          <Box variant="span">{Math.round(scale * 100)}%</Box>
+          <Box variant="span" color="text-status-inactive" fontSize="body-s">
+            {Math.round(scale * 100)}%
+          </Box>
           <Button
             iconName="zoom-in"
             variant="icon"
@@ -132,13 +141,15 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
           padding: '16px',
           display: 'flex',
           justifyContent: 'center',
+          alignItems: 'flex-start',
+          backgroundColor: '#394150',
         }}
       >
         <Document
           file={pdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
           loading={
-            <Box textAlign="center" padding="l">
+            <Box textAlign="center" padding="l" color="text-status-inactive">
               Loading PDF...
             </Box>
           }
@@ -148,7 +159,14 @@ export function PDFViewer({ pdfUrl, selectedResult }: PDFViewerProps) {
             </Box>
           }
         >
-          <div style={{ position: 'relative', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+          <div
+            style={{
+              position: 'relative',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+              borderRadius: '4px',
+              overflow: 'hidden',
+            }}
+          >
             <Page
               pageNumber={pageNumber}
               scale={scale}

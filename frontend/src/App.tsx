@@ -1,18 +1,18 @@
 import { useState } from 'react';
+import TopNavigation from '@cloudscape-design/components/top-navigation';
+import SplitPanel from '@cloudscape-design/components/split-panel';
 import AppLayout from '@cloudscape-design/components/app-layout';
-import ContentLayout from '@cloudscape-design/components/content-layout';
-import Header from '@cloudscape-design/components/header';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Grid from '@cloudscape-design/components/grid';
 import Container from '@cloudscape-design/components/container';
+import Header from '@cloudscape-design/components/header';
 import Input from '@cloudscape-design/components/input';
 import Button from '@cloudscape-design/components/button';
-import Cards from '@cloudscape-design/components/cards';
+import SpaceBetween from '@cloudscape-design/components/space-between';
 import Box from '@cloudscape-design/components/box';
 import Badge from '@cloudscape-design/components/badge';
 import Link from '@cloudscape-design/components/link';
 import Alert from '@cloudscape-design/components/alert';
 import Spinner from '@cloudscape-design/components/spinner';
+import ColumnLayout from '@cloudscape-design/components/column-layout';
 import { PDFViewer } from './components/PDFViewer';
 import { searchDocuments } from './api';
 import type { SearchResult } from './types';
@@ -20,12 +20,12 @@ import type { SearchResult } from './types';
 const PDF_URL = import.meta.env.VITE_PDF_URL || './medishield.pdf';
 
 const EXAMPLE_QUERIES = [
-  'What is MediShield Life?',
-  'How much can I claim for surgery?',
-  'Pre-existing conditions coverage',
-  'Premium rates by age',
-  'What is the deductible?',
-  'How to make a claim?',
+  { label: 'What is MediShield Life?', icon: '📋' },
+  { label: 'Surgery claim limits', icon: '🏥' },
+  { label: 'Pre-existing conditions', icon: '📝' },
+  { label: 'Premium by age', icon: '💰' },
+  { label: 'Deductible amount', icon: '🧾' },
+  { label: 'How to claim', icon: '📤' },
 ];
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
 
   const handleSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
-    
+
     setQuery(searchQuery);
     setIsLoading(true);
     setError(null);
@@ -63,32 +63,56 @@ function App() {
   };
 
   return (
-    <AppLayout
-      navigationHide
-      toolsHide
-      content={
-        <ContentLayout
-          header={
-            <Header
-              variant="h1"
-              description="Search MediShield Life policy documents using natural language"
-              actions={
-                <Link
-                  href="https://www.moh.gov.sg/medishield-life"
-                  external
-                  variant="primary"
-                >
-                  Official MOH Website
-                </Link>
-              }
-            >
-              MediShield Life Document Search
-            </Header>
-          }
-        >
+    <>
+      <TopNavigation
+        identity={{
+          href: '#',
+          title: 'MediShield Life',
+          logo: {
+            src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>',
+            alt: 'MediShield Life',
+          },
+        }}
+        utilities={[
+          {
+            type: 'button',
+            text: 'Official MOH Website',
+            href: 'https://www.moh.gov.sg/medishield-life',
+            external: true,
+            externalIconAriaLabel: 'Opens in a new tab',
+          },
+        ]}
+      />
+
+      <AppLayout
+        navigationHide
+        toolsHide
+        contentType="default"
+        splitPanel={
+          <SplitPanel
+            header="Document Viewer"
+            hidePreferencesButton
+            closeBehavior="hide"
+          >
+            <div style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+              <PDFViewer pdfUrl={PDF_URL} selectedResult={selectedResult} />
+            </div>
+          </SplitPanel>
+        }
+        splitPanelOpen={true}
+        splitPanelPreferences={{ position: 'side' }}
+        splitPanelSize={700}
+        content={
           <SpaceBetween size="l">
             <Container>
               <SpaceBetween size="m">
+                <Header
+                  variant="h1"
+                  description="Ask questions about coverage, claims, premiums, and more"
+                >
+                  Document Search
+                </Header>
+
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <div style={{ flex: 1 }}>
                     <Input
@@ -104,25 +128,43 @@ function App() {
                     onClick={() => handleSearch(query)}
                     loading={isLoading}
                     disabled={!query.trim()}
+                    iconName="search"
                   >
                     Search
                   </Button>
                 </div>
 
-                <SpaceBetween size="xs" direction="horizontal">
-                  <Box variant="span" color="text-body-secondary">
-                    Try:
-                  </Box>
+                <ColumnLayout columns={3} variant="text-grid">
                   {EXAMPLE_QUERIES.map((example) => (
-                    <Button
-                      key={example}
-                      variant="link"
-                      onClick={() => handleSearch(example)}
+                    <div
+                      key={example.label}
+                      onClick={() => handleSearch(example.label)}
+                      style={{
+                        padding: '12px',
+                        border: '1px solid #e9ebed',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        backgroundColor: '#fff',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.borderColor = '#0972d3';
+                        e.currentTarget.style.backgroundColor = '#f2f8fd';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.borderColor = '#e9ebed';
+                        e.currentTarget.style.backgroundColor = '#fff';
+                      }}
                     >
-                      {example}
-                    </Button>
+                      <SpaceBetween size="xxs">
+                        <span style={{ fontSize: '20px' }}>{example.icon}</span>
+                        <Box variant="span" fontSize="body-s">
+                          {example.label}
+                        </Box>
+                      </SpaceBetween>
+                    </div>
                   ))}
-                </SpaceBetween>
+                </ColumnLayout>
               </SpaceBetween>
             </Container>
 
@@ -132,93 +174,83 @@ function App() {
               </Alert>
             )}
 
-            <Grid gridDefinition={[{ colspan: 4 }, { colspan: 8 }]}>
-              <Container
-                header={
-                  <Header
-                    variant="h2"
-                    counter={hasSearched ? `(${results.length})` : undefined}
-                  >
-                    Results
-                  </Header>
-                }
-              >
-                {isLoading ? (
-                  <Box textAlign="center" padding="l">
+            <Container
+              header={
+                <Header
+                  variant="h2"
+                  counter={hasSearched ? `(${results.length})` : undefined}
+                  description={
+                    hasSearched && results.length > 0
+                      ? 'Click a result to view it in the document'
+                      : undefined
+                  }
+                >
+                  Search Results
+                </Header>
+              }
+            >
+              {isLoading ? (
+                <Box textAlign="center" padding="l">
+                  <SpaceBetween size="s" alignItems="center">
                     <Spinner size="large" />
-                  </Box>
-                ) : !hasSearched ? (
-                  <Box textAlign="center" padding="l" color="text-body-secondary">
-                    Enter a query or click an example to search
-                  </Box>
-                ) : results.length === 0 ? (
-                  <Box textAlign="center" padding="l" color="text-body-secondary">
-                    No results found. Try a different query.
-                  </Box>
-                ) : (
-                  <Cards
-                    items={results}
-                    cardDefinition={{
-                      header: (item) => (
+                    <Box color="text-body-secondary">Searching documents...</Box>
+                  </SpaceBetween>
+                </Box>
+              ) : !hasSearched ? (
+                <Box textAlign="center" padding="l" color="text-body-secondary">
+                  <SpaceBetween size="s">
+                    <Box variant="h3" color="text-body-secondary">
+                      👆
+                    </Box>
+                    <Box>Enter a query or click an example above to get started</Box>
+                  </SpaceBetween>
+                </Box>
+              ) : results.length === 0 ? (
+                <Box textAlign="center" padding="l" color="text-body-secondary">
+                  No results found. Try a different query.
+                </Box>
+              ) : (
+                <SpaceBetween size="s">
+                  {results.map((result, index) => (
+                    <div
+                      key={result.id}
+                      onClick={() => setSelectedResult(result)}
+                      style={{
+                        padding: '16px',
+                        border:
+                          selectedResult?.id === result.id
+                            ? '2px solid #0972d3'
+                            : '1px solid #e9ebed',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        backgroundColor:
+                          selectedResult?.id === result.id ? '#f2f8fd' : '#fff',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <SpaceBetween size="xs">
                         <SpaceBetween size="xs" direction="horizontal">
-                          <Badge color="blue">Page {item.page}</Badge>
+                          <Badge color="blue">#{index + 1}</Badge>
+                          <Badge color="grey">Page {result.page}</Badge>
                           <Badge
                             color={
-                              item.score >= 0.7
+                              result.score >= 0.7
                                 ? 'green'
-                                : item.score >= 0.5
+                                : result.score >= 0.5
                                 ? 'grey'
                                 : 'red'
                             }
                           >
-                            {Math.round(item.score * 100)}% match
+                            {Math.round(result.score * 100)}% relevance
                           </Badge>
                         </SpaceBetween>
-                      ),
-                      sections: [
-                        {
-                          id: 'text',
-                          content: (item) => (
-                            <Box
-                              variant="p"
-                              color={
-                                selectedResult?.id === item.id
-                                  ? 'text-body-secondary'
-                                  : 'text-body-secondary'
-                              }
-                            >
-                              {item.text.length > 200
-                                ? item.text.substring(0, 200) + '...'
-                                : item.text}
-                            </Box>
-                          ),
-                        },
-                      ],
-                    }}
-                    selectionType="single"
-                    selectedItems={selectedResult ? [selectedResult] : []}
-                    onSelectionChange={({ detail }) =>
-                      setSelectedResult(detail.selectedItems[0] || null)
-                    }
-                    trackBy="id"
-                    empty={
-                      <Box textAlign="center" color="inherit">
-                        No results
-                      </Box>
-                    }
-                  />
-                )}
-              </Container>
-
-              <Container
-                header={<Header variant="h2">Document Viewer</Header>}
-                fitHeight
-              >
-                <div style={{ height: '600px' }}>
-                  <PDFViewer pdfUrl={PDF_URL} selectedResult={selectedResult} />
-                </div>
-              </Container>
-            </Grid>
+                        <Box variant="p">{result.text}</Box>
+                      </SpaceBetween>
+                    </div>
+                  ))}
+                </SpaceBetween>
+              )}
+            </Container>
 
             <Box textAlign="center" color="text-body-secondary" fontSize="body-s">
               This is a demonstration tool. For official information, visit the{' '}
@@ -228,9 +260,9 @@ function App() {
               .
             </Box>
           </SpaceBetween>
-        </ContentLayout>
-      }
-    />
+        }
+      />
+    </>
   );
 }
 
