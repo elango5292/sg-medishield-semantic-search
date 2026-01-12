@@ -1,5 +1,7 @@
 # MediShield Life Explorer
 
+![Preview](preview.png)
+
 Semantic search interface for Singapore's MediShield Life policy document. Ask natural language questions and get relevant sections highlighted directly in the PDF.
 
 **[Try it live →](https://elango5292.github.io/sg-medishield-semantic-search/)**
